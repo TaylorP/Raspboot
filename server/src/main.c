@@ -1,3 +1,7 @@
+#include <common/command.h>
+#include <common/mode.h>
+#include <common/types.h>
+
 #include "memory.h"
 
 #define GPFSEL1         0x20200004
@@ -56,35 +60,114 @@ S32 uartGet()
     return __ldr(UART0_DR);
 }
 
+int uartPut(unsigned int c)
+{
+    while ((__ldr(UART0_FR) & 0x20) != 0)
+    {
+    }
+
+    __str(UART0_DR, c);
+
+    return 0;
+}
+
+
+U32 readBinary()
+{
+    U32 address = 0;
+
+    U32 i;
+    for (i = 0; i < 4; i++)
+    {
+        address = address << 8;
+        address |= uartGet();
+    }
+
+    U32 count = 0;
+    for (i = 0; i < 4; i++)
+    {
+        count = count << 8;
+        count |= uartGet();
+    }
+
+    U8* mem = (U8*)(address);
+    for (i = 0; i < count; i++)
+    {
+        *mem = (U8)(uartGet());
+        mem += 1;
+    }
+
+    return address;
+}
+
+S32 processAbort(U32* mode)
+{
+    U32 input = uartGet();
+    if (input == MODE_TRANSFER || input == MODE_INTERACT)
+    {
+        *mode = input;
+        return 0;
+    }
+
+    return -1;
+}
+
+S32 processTransfer(U32* address)
+{
+    U32 input = uartGet();
+
+    if (input == COMMAND_TRANSFER_INIT)
+    {
+        U32 addr = readBinary();
+        if (uartGet() == COMMAND_TRANSFER_END)
+        {
+            *address = addr;
+            return 0;
+        }
+
+        return -1;
+    }
+
+    return -1;
+}
+
+S32 processInteract()
+{
+    return 0;
+}
+
 void main()
 {
     uartInit();
 
+    U32 mode = MODE_ABORT;
+    U32 address = 0;
+
     while(1)
-    {
-        U32 address = 0;
-
-        U32 i;
-        for (i = 0; i < 4; i++)
+    {        
+        switch (mode)
         {
-            address = address << 8;
-            address |= uartGet();
-        }
+            case MODE_ABORT:
+            {
+                processAbort(&mode);
+                break;
+            }
 
-        U32 count = 0;
-        for (i = 0; i < 4; i++)
-        {
-            count = count << 8;
-            count |= uartGet();
-        }
+            case MODE_TRANSFER:
+            {
+                processTransfer(&address);
+                ((void (*)(void)) address)();
+                break;
+            }
 
-        U8* mem = (U8*)(address);
-        for (i = 0; i < count; i++)
-        {
-            *mem = (U8)(uartGet());
-            mem += 1;
-        }
+            case MODE_INTERACT:
+            {
+                processInteract();
+                break;
+            }
 
-        ((void (*)(void)) address)();
+            default:
+                break;
+        }
     }
 }

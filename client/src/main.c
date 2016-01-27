@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <common/command.h>
 #include <common/mode.h>
 
 #include "args.h"
+#include "output.h"
 #include "serial.h"
 
 int main(int argc, char** argv)
@@ -16,7 +16,7 @@ int main(int argc, char** argv)
         raspbootArgsParse(&args, argc, argv) < 0)
     {
         fprintf(stderr, "Unable to parse arguments.\n");
-        return 1;
+        exit(1);
     }
 
     if (args.help)
@@ -28,25 +28,16 @@ int main(int argc, char** argv)
     if (raspbootSerialInit(&serial, &args) != 0)
     {
         fprintf(stderr, "Unable to initialize serial connection\n");
-        return 1;
+        exit(1);
     }
 
-    printf("%c[2J%c[0;0H", 27, 27);
-
-    unsigned char buffer[1024];
-    FILE *ptr;
-    ptr = fopen(args.binary,"rb");
-    int count = fread(buffer, 1, sizeof(buffer), ptr);
-
-    raspbootSerialPutW(&serial, args.location);
-    raspbootSerialPutW(&serial, count);
-
-    int i;
-    for (i = 0; i < count; i++)
+    if (args.binary != 0)
     {
-        raspbootSerialPut(&serial, buffer[i]);
+        raspbootSerialPut(&serial, MODE_TRANSFER);
+        raspbootOutputBinary(&serial, &args);
     }
 
+    raspbootSerialPut(&serial, MODE_INTERACT);
     raspbootSerialFlush(&serial);
 
     raspbootArgsDestroy(&args);

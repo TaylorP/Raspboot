@@ -23,8 +23,8 @@ S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
     }
 
     // Set the TTY speed
-    cfsetospeed(tty, args->speed);
-    cfsetispeed(tty, args->speed);
+    cfsetospeed(tty, B115200);
+    cfsetispeed(tty, B115200);
 
     // Set other terminal flags (char size, breaks, etc)
     tty->c_cflag = (tty->c_cflag & ~CSIZE) | CS8;
@@ -45,7 +45,7 @@ S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
     if (tcsetattr(serial->connection, TCSANOW, tty) != 0)
     {
         fprintf (stderr,
-                 "raspboot: errort when setting tty attributes: %s",
+                 "raspboot: error when setting tty attributes: %s",
                  strerror(errno));
         return -1;
     }
