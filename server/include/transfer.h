@@ -12,8 +12,8 @@
  *
  * @param   address     The memory address containing the transfered bytes
  *
- * @returns A process mode return code
+ * @returns A transfer mode return code
  */
-S32 processTransfer(U32* address);
+S32 raspbootTransferMode(U32* address);
 
 #endif

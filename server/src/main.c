@@ -8,7 +8,7 @@
 
 S32 processAbort(U32* mode)
 {
-    U32 input = uartGet();
+    U32 input = raspbootUartGet();
     if (input == MODE_TRANSFER || input == MODE_INTERACT)
     {
         *mode = input;
@@ -25,7 +25,7 @@ S32 processInteract()
 
 void main()
 {
-    uartInit();
+    raspbootUartInit();
 
     U32 mode = MODE_ABORT;
     U32 address = 0;
@@ -42,7 +42,7 @@ void main()
 
             case MODE_TRANSFER:
             {
-                if (processTransfer(&address) == 1)
+                if (raspbootTransferMode(&address) == 1)
                 {
                     ((void (*)(void)) address)();
                 }
