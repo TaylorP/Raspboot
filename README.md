@@ -29,7 +29,7 @@ The current client runs in a loop, so if the uploaded binary terminates and retu
 * Optionally pass parameters to the binary when executing it
 * Finish interactive mode 
 * Finish documentation
-* Modularize server-side UART code
+* ~~Modularize server-side UART code~~
 * Add Ethernet support (long term)
 
 ## Other Platforms
