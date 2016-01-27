@@ -33,11 +33,11 @@ int main(int argc, char** argv)
 
     if (args.binary != 0)
     {
-        raspbootSerialPut(&serial, MODE_TRANSFER);
+        raspbootOutputMode(&serial, MODE_TRANSFER);
         raspbootOutputBinary(&serial, &args);
     }
 
-    raspbootSerialPut(&serial, MODE_INTERACT);
+    raspbootOutputMode(&serial, MODE_INTERACT);
     raspbootSerialFlush(&serial);
 
     raspbootArgsDestroy(&args);

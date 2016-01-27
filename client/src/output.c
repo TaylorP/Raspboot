@@ -3,7 +3,27 @@
 #include <string.h>
 
 #include <common/command.h>
+#include <common/mode.h>
+
 #include "output.h"
+
+S32 raspbootOutputMode(Raspboot_Serial* serial, const U8 mode)
+{
+    if (mode == MODE_TRANSFER)
+    {
+        printf("Entering transfer mode\n");
+    }
+    else if (mode == MODE_INTERACT)
+    {
+        printf("Entering interaction mode\n");
+    }
+    else
+    {
+        return -1;
+    }
+
+    return raspbootSerialPut(serial, mode);
+}
 
 S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
 {
@@ -16,6 +36,10 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
                 args->binary, strerror(errno));
         return -1;
     }
+    else
+    {
+        printf("\tOpened binary file %s\n", args->binary);
+    }
 
     // Write the start transfer command byte
     raspbootSerialPut(serial, COMMAND_TRANSFER_INIT);
@@ -24,22 +48,27 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
     raspbootSerialPutW(serial, args->location);
 
     // Find the file size and write it to the connection
+    U32 size = ftell(ptr);
     fseek(ptr, 0L, SEEK_END);
-    raspbootSerialPutW(serial, ftell(ptr));
+    raspbootSerialPutW(serial, size);
     fseek(ptr, 0L, SEEK_SET);
+    printf("\tWriting %d bytes of data to %x\n", size, args->location);
     
-    // Write bytes in blocks of 1024
-    U8 buffer[1024];
+    // Write bytes in blocks of OUTPUT_BLOCK_SIZE (1024)
+    U8 buffer[OUTPUT_BLOCK_SIZE];
     int count, i;
+    int total = 0;
     while (1)
     {
         count = fread(buffer, 1, sizeof(buffer), ptr);
+        total += count;
         for (i = 0; i < count; i++)
         {
             raspbootSerialPut(serial, buffer[i]);
         }
+        printf("\t%d/%d bytes written\n", total, size);
 
-        if (count < 1024)
+        if (count < OUTPUT_BLOCK_SIZE)
         {
             break;
         }
