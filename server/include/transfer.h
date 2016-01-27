@@ -11,9 +11,10 @@
  * Runs the state machine for transfer mode
  *
  * @param   address     The memory address containing the transfered bytes
+ * @param   mode        A pointer to the mode value
  *
  * @returns A transfer mode return code
  */
-S32 raspbootTransferMode(U32* address);
+S32 raspbootTransferMode(U32* address, U32* mode);
 
 #endif

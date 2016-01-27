@@ -14,6 +14,7 @@ S32 raspbootArgsInit(Raspboot_Args* args)
     }
 
     args->go = 0;
+    args->terminate = 0;
     args->help = 0;
     args->location = 0x10000;
     args->speed = 115200;
@@ -52,7 +53,7 @@ S32 raspbootArgsParse(Raspboot_Args* args, S32 argc, char** argv)
     }
 
     S32 c;
-    while ((c = getopt(argc, argv, "ghb:l:r:")) != -1)
+    while ((c = getopt(argc, argv, "ghtb:l:r:")) != -1)
     {
         switch (c)
         {
@@ -62,6 +63,10 @@ S32 raspbootArgsParse(Raspboot_Args* args, S32 argc, char** argv)
 
             case 'h':
                 args->help = 1;
+                break;
+
+            case 't':
+                args->terminate = 1;
                 break;
 
             case 'b':
@@ -81,18 +86,6 @@ S32 raspbootArgsParse(Raspboot_Args* args, S32 argc, char** argv)
                 {
                     fprintf(stderr,
                             "raspboot: Option `-%c` requires an argument.\n",
-                            optopt);
-                }
-                else if (isprint(optopt))
-                {
-                    fprintf(stderr,
-                            "raspboot: Unknown option `-%c`.\n",
-                            optopt);
-                }
-                else
-                {
-                    fprintf(stderr,
-                            "raspboot: Unknown option character `\\x%x`.\n",
                             optopt);
                 }
 
@@ -133,10 +126,12 @@ void raspbootArgsUsage()
            "  -g\tExecute the binary as soon as transfer is complete. By \n"\
            "\tdefault raspboot will enter interactive mode after the file \n"\
            "\ttransfer completes.\n"\
+           "  -t\tTerminate Raspboot after transfer instead of entering\n"\
+           "\titeractive mode. Usually used with -g\n"
            "  -h\tPrints this help message.\n"\
            "  -l\tThe memory location to write the binary to. Defaults to \n"\
            "\t0x10000. Raspboot will issue a warning if the address \n"\
            "\toverlaps with the location of the Raspboot client.\n"\
-           "  -r\tThe serial connection baud rate. Defaults to 115200.\n"\
+           "  -r\tThe serial connection baud rate. Defaults to 115200.\n"
            );
 }

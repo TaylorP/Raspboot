@@ -32,33 +32,47 @@ U32 _raspbootTransferBinary()
     return address;
 }
 
-S32 raspbootTransferMode(U32* address)
+S32 raspbootTransferMode(U32* address, U32* mode)
 {
-    U32 input = raspbootUartGet();
+    U8 input = raspbootUartGet();
 
-    if (input == MODE_TRANSFER)
+    while (1)
     {
-        input = raspbootUartGet();
-    }
-
-    if (input == COMMAND_TRANSFER_INIT)
-    {
-        U32 addr = _raspbootTransferBinary();
-        U8 command = raspbootUartGet();
-
-        if (command == COMMAND_TRANSFER_END)
+        if (input == MODE_TRANSFER)
         {
-            *address = addr;
+            input = raspbootUartGet();
+            continue;
+        }
+        else if (input == MODE_INTERACT)
+        {
+            *mode = input;
             return PROCESS_TRANSFER_SUCCESS;
         }
-        else if (command == COMMAND_TRANSFER_END_R)
+        else if (input == MODE_ABORT)
         {
-            *address = addr;
-            return PROCESS_TRANSFER_EXECUTE;
+            *mode = input;
+            return PROCESS_TRANSFER_ERROR;
+        }
+
+        if (input == COMMAND_TRANSFER_INIT)
+        {
+            U32 addr = _raspbootTransferBinary();
+            U8 command = raspbootUartGet();
+
+            if (command == COMMAND_TRANSFER_END)
+            {
+                *address = addr;
+                return PROCESS_TRANSFER_SUCCESS;
+            }
+            else if (command == COMMAND_TRANSFER_END_R)
+            {
+                *address = addr;
+                return PROCESS_TRANSFER_EXECUTE;
+            }
+
+            return PROCESS_TRANSFER_ERROR;
         }
 
         return PROCESS_TRANSFER_ERROR;
     }
-
-    return PROCESS_TRANSFER_ERROR;
 }

@@ -3,6 +3,7 @@
 #include <common/types.h>
 
 #include "memory.h"
+#include "interact.h"
 #include "transfer.h"
 #include "uart.h"
 
@@ -16,11 +17,6 @@ S32 processAbort(U32* mode)
     }
 
     return -1;
-}
-
-S32 processInteract()
-{
-    return 0;
 }
 
 void main()
@@ -42,7 +38,8 @@ void main()
 
             case MODE_TRANSFER:
             {
-                if (raspbootTransferMode(&address) == 1)
+                if (raspbootTransferMode(&address, &mode)
+                        == PROCESS_TRANSFER_EXECUTE)
                 {
                     ((void (*)(void)) address)();
                 }
@@ -52,7 +49,13 @@ void main()
 
             case MODE_INTERACT:
             {
-                processInteract();
+                S32 result = raspbootInteractMode(&mode);
+
+                if (result == PROCESS_INTERACT_EXECUTE)
+                {
+                    ((void (*)(void)) address)();
+                }
+
                 break;
             }
 

@@ -14,6 +14,10 @@ typedef struct
     /// as soon as the upload completes.
     U32     go;
 
+    /// Set to true if Raspboot should terminate as soon as the binary
+    /// is uploaded (and excuted, if -g is specified).
+    U32     terminate;
+    
     /// Set to true if Raspboot should print usage information. Only
     /// checked if no other arguments or serial port were specified.
     U32     help;
