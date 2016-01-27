@@ -36,6 +36,11 @@ S32 raspbootTransferMode(U32* address)
 {
     U32 input = raspbootUartGet();
 
+    if (input == MODE_TRANSFER)
+    {
+        input = raspbootUartGet();
+    }
+
     if (input == COMMAND_TRANSFER_INIT)
     {
         U32 addr = _raspbootTransferBinary();
