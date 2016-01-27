@@ -52,10 +52,16 @@ S32 processTransfer(U32* address)
     if (input == COMMAND_TRANSFER_INIT)
     {
         U32 addr = readBinary();
-        if (uartGet() == COMMAND_TRANSFER_END)
+        U8 command = uartGet();
+        if (command == COMMAND_TRANSFER_END)
         {
             *address = addr;
             return 0;
+        }
+        else if (command == COMMAND_TRANSFER_END_R)
+        {
+            *address = addr;
+            return 1;
         }
 
         return -1;
@@ -88,8 +94,11 @@ void main()
 
             case MODE_TRANSFER:
             {
-                processTransfer(&address);
-                ((void (*)(void)) address)();
+                if (processTransfer(&address) == 1)
+                {
+                    ((void (*)(void)) address)();
+                }
+                
                 break;
             }
 

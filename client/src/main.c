@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 
     raspbootOutputMode(&serial, MODE_INTERACT);
     raspbootSerialFlush(&serial);
-
+    
     raspbootArgsDestroy(&args);
     exit(0);
 }

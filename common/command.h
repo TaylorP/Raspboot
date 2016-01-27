@@ -3,5 +3,6 @@
 
 #define COMMAND_TRANSFER_INIT   0x10
 #define COMMAND_TRANSFER_END    0x11
+#define COMMAND_TRANSFER_END_R  0x12
 
 #endif

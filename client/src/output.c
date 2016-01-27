@@ -74,8 +74,11 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
         }
     }
 
-    // Write the end transfer command byte
-    raspbootSerialPut(serial, COMMAND_TRANSFER_END);
+    // Write the end command byte
+    U8 endCommand = (args->go == 0 ?
+                        COMMAND_TRANSFER_END : COMMAND_TRANSFER_END_R);
+    
+    raspbootSerialPut(serial, endCommand);
 
     return 0;
 }
