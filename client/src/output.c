@@ -48,11 +48,11 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
     raspbootSerialPutW(serial, args->location);
 
     // Find the file size and write it to the connection
-    U32 size = ftell(ptr);
     fseek(ptr, 0L, SEEK_END);
+    U32 size = ftell(ptr);
     raspbootSerialPutW(serial, size);
     fseek(ptr, 0L, SEEK_SET);
-    printf("\tWriting %d bytes of data to %x\n", size, args->location);
+    printf("\tWriting %d bytes of data to 0x%x\n", size, args->location);
     
     // Write bytes in blocks of OUTPUT_BLOCK_SIZE (1024)
     U8 buffer[OUTPUT_BLOCK_SIZE];
