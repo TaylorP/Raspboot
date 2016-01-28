@@ -22,7 +22,7 @@ raspboot -b /path/to/binary.bin -l 0x16000 /dev/ttyUSB0
 ```
 The `-b` argument indicates which binary file to tranfer, `-l` is the location in the Pi's memory to upload the binary and the final argument is the serial port to open a connection to.
 
-The current client runs in a loop, so if the uploaded binary terminates and returns out properly, it should jump back into the Raspboot server. Another binary can then be uploaded using the same command. Note that Raspboot does not stack any of the registers before jumping to the uploaded binary. It is up to the binary itself to stack/unstack registers that it modifies (this may change in future releases).
+The current client runs in a loop, so if the uploaded binary terminates and returns out properly, it should jump back into the Raspboot server. Another binary can then be uploaded using the same command. Note that Raspboot will stack registers `r0` through `r12` and the `link register (r14)` before branching to the uploaded code.
 
 ## Todo List
 * Properly use the speed/baud rate parameter

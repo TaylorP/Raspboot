@@ -58,10 +58,21 @@ int main(int argc, char** argv)
 
                 if (inputBuffer[0] == 'g' && inputBuffer[1] == 'o')
                 {
-                    printf("\tExecuting code at memory address 0x%x\n",
+                    printf("Executing code at memory address 0x%x\n\n",
                            args.location);
                     raspbootSerialPut(&serial, COMMAND_INTERACT_GO);
                     raspbootSerialFlush(&serial);
+
+                    while (1)
+                    {
+                        U8 byte;
+                        raspbootSerialGet(&serial, &byte);
+                        if (byte == COMMAND_INTERACT_END)
+                        {
+                            break;
+                        }
+                        printf("%c", byte);
+                    }
                 }
                 printf("> ");
             }

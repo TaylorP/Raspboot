@@ -37,6 +37,16 @@ typedef struct
 S32 raspbootSerialInit(Raspboot_Serial* serial, Raspboot_Args* args);
 
 /**
+ * Reads a single byte from a serial connection
+ *
+ * @param   serial  The Raspboot_Serial connection to read from
+ * @param   byte    The byte to read into
+ *
+ * @return  0 on sucess, else an error code
+ */
+S32 raspbootSerialGet(Raspboot_Serial* serial, U8* byte);
+
+/**
  * Writes a single byte to a serial connection
  *
  * @param   serial  The Raspboot_Serial connection to write to

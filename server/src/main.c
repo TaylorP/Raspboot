@@ -7,6 +7,8 @@
 #include "transfer.h"
 #include "uart.h"
 
+extern void _enterAddress(U32);
+
 S32 processAbort(U32* mode)
 {
     U32 input = raspbootUartGet();
@@ -41,7 +43,7 @@ void main()
                 if (raspbootTransferMode(&address, &mode)
                         == PROCESS_TRANSFER_EXECUTE)
                 {
-                    ((void (*)(void)) address)();
+                    _enterAddress(address);
                 }
                 
                 break;
@@ -53,7 +55,8 @@ void main()
 
                 if (result == PROCESS_INTERACT_EXECUTE)
                 {
-                    ((void (*)(void)) address)();
+                    _enterAddress(address);
+                    raspbootUartPut(COMMAND_INTERACT_END);
                 }
 
                 break;

@@ -5,6 +5,7 @@
 #define COMMAND_TRANSFER_END    0x11
 #define COMMAND_TRANSFER_END_R  0x12
 
-#define COMMAND_INTERACT_GO     0x30
+#define COMMAND_INTERACT_GO     0x80
+#define COMMAND_INTERACT_END    0x81
 
 #endif

@@ -32,6 +32,10 @@ S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
     tty->c_lflag = 0;
     tty->c_oflag = 0;
 
+    // Set blocking parameters
+    tty->c_cc[VMIN]  = 1;
+    tty->c_cc[VTIME] = 5;
+
     // Disable xon/xoff control
     tty->c_iflag &= ~(IXON | IXOFF | IXANY);
 
@@ -76,6 +80,16 @@ S32 raspbootSerialInit(Raspboot_Serial* serial, Raspboot_Args* args)
 
     // Set TTY settings for the device
     return _raspbootInitTerminal(serial, args);
+}
+
+S32 raspbootSerialGet(Raspboot_Serial* serial, U8* byte)
+{
+    if (read(serial->connection, byte, 1) == 1)
+    {
+        return 0;
+    }
+
+    return -1;
 }
 
 S32 raspbootSerialPut(Raspboot_Serial* serial, const U8 byte)
