@@ -24,6 +24,21 @@ The `-b` argument indicates which binary file to tranfer, `-l` is the location i
 
 The current client runs in a loop, so if the uploaded binary terminates and returns out properly, it should jump back into the Raspboot server. Another binary can then be uploaded using the same command. Note that Raspboot will stack registers `r0` through `r12` and the `link register (r14)` before branching to the uploaded code.
 
+## Command Line Arguments
+Raspboot can be configured with the following arguments, all of which are optional:
+```
+-b      Path to the binary file to upload
+-g      Jump into the uploaded binary as soon as the upload finishes
+-t      Terminate Raspboot after running the binary (typically used with -g)
+-h      Print usage information if no other args are specified
+-l      The memory location to write the binary to
+```
+## Interactive Mode Commands
+If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available:
+```
+go     Jumps into the uploaded code.
+```
+
 ## Todo List
 * Properly use the speed/baud rate parameter
 * Optionally pass parameters to the binary when executing it
