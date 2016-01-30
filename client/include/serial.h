@@ -86,4 +86,14 @@ S32 raspbootSerialPutN(Raspboot_Serial* serial, U8* bytes, const U32 n);
  */
 S32 raspbootSerialFlush(Raspboot_Serial* serial);
 
+/**
+ * Clears unprocessed data the serial connection
+ *
+ * @param   serial  The Raspboot_Serial connection to clear
+ * @param   queue   The termios queue selector to clear
+ *
+ * @return  0 on success, else an error code
+ */
+S32 raspbootSerialClear(Raspboot_Serial* serial, const U32 queue);
+
 #endif

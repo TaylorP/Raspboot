@@ -54,6 +54,9 @@ S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
         return -1;
     }
 
+    // Clear all pending data from the TTY
+    raspbootSerialClear(serial, TCIOFLUSH);
+
     return 0;
 }
 
@@ -149,4 +152,9 @@ S32 raspbootSerialFlush(Raspboot_Serial* serial)
     serial->bufferIndex = 0;
     
     return result;
+}
+
+S32 raspbootSerialClear(Raspboot_Serial* serial, const U32 queue)
+{
+    return tcflush(serial->connection, queue);
 }
