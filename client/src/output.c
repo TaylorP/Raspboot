@@ -52,26 +52,55 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
     U32 size = ftell(ptr);
     raspbootSerialPutW(serial, size);
     fseek(ptr, 0L, SEEK_SET);
-    printf("\tWriting %d bytes of data to 0x%x\n", size, args->location);
-    
+    printf("\tWriting %d bytes of data to memory at address 0x%x\n",
+           size,
+           args->location);
+    printf("\tUsing block size of %d bytes\n", OUTPUT_BLOCK_SIZE);
+
     // Write bytes in blocks of OUTPUT_BLOCK_SIZE (1024)
     U8 buffer[OUTPUT_BLOCK_SIZE];
-    int count, i;
-    int total = 0;
+    U32 count, i;
+    U32 total = 0;
+    U8 checksum = 0;
+
     while (1)
     {
+        // Read from the binary file
         count = fread(buffer, 1, sizeof(buffer), ptr);
         total += count;
+
+        // Write to the connection and compute the checksum
         for (i = 0; i < count; i++)
         {
             raspbootSerialPut(serial, buffer[i]);
+            checksum += buffer[i];
         }
+
+        // Print info to the Raspboot client
         printf("\t%d/%d bytes written\n", total, size);
 
         if (count < OUTPUT_BLOCK_SIZE)
         {
             break;
         }
+    }
+
+    // Send the checksum value
+    printf("\tChecksum = %d, confirming with server...\n", checksum);
+    raspbootSerialPut(serial, checksum);
+    raspbootSerialFlush(serial);
+
+    // Verify the checksum with the device
+    U8 checkResult;
+    raspbootSerialGet(serial, &checkResult);
+    if (checkResult == COMMAND_TRANSFER_CHECKP)
+    {
+        printf("\tChecksum passed\n");
+    }
+    else
+    {
+        printf("\tChecksum failed. Retry transfer (y/n)?\n> ");
+        return -1;
     }
 
     // Write the end command byte

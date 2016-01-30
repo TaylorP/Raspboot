@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,7 +36,20 @@ int main(int argc, char** argv)
     if (args.binary != 0)
     {
         raspbootOutputMode(&serial, MODE_TRANSFER);
-        raspbootOutputBinary(&serial, &args);
+        while (raspbootOutputBinary(&serial, &args) != 0)
+        {
+            char retry = getchar();
+            while (isspace(retry))
+            {
+                retry = getchar();
+            }
+
+            if (retry != 'Y' && retry != 'y')
+            {
+                printf("Transfer aborted\n");
+                exit(1);
+            }
+        }
     }
 
     raspbootOutputMode(&serial, MODE_INTERACT);
