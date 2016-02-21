@@ -27,11 +27,12 @@ The current client runs in a loop, so if the uploaded binary terminates and retu
 ## Command Line Arguments
 Raspboot can be configured with the following arguments, all of which are optional:
 ```
--b      Path to the binary file to upload
--g      Jump into the uploaded binary as soon as the upload finishes
--t      Terminate Raspboot after running the binary (typically used with -g)
+-b      Path to the binary file to upload [default: none]
+-g      Jump into the uploaded binary as soon as the upload finishes [default: disabled]
+-t      Terminate Raspboot after running the binary (typically used with -g) [default: disabled]
 -h      Print usage information if no other args are specified
--l      The memory location to write the binary to
+-l      The memory location to write the binary to [default: 0x10000]
+-r      The baud rate - must be a valid rate supported by termios, e.g. 4800, 9600, 115200 [default: 115200]
 ```
 ## Interactive Mode Commands
 If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available:
