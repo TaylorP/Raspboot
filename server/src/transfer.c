@@ -4,46 +4,7 @@
 #include "transfer.h"
 #include "uart.h"
 
-S32 _raspbootTransferBinary(U32* address)
-{
-    U32 addr = 0;
-
-    U32 i;
-    for (i = 0; i < 4; i++)
-    {
-        addr = addr << 8;
-        addr |= raspbootUartGet();
-    }
-
-    U32 count = 0;
-    for (i = 0; i < 4; i++)
-    {
-        count = count << 8;
-        count |= raspbootUartGet();
-    }
-
-    U8* mem = (U8*)(addr);
-    U8 checksum = 0;
-    for (i = 0; i < count; i++)
-    {
-        U8 byte = (U8)(raspbootUartGet());
-        *mem = byte;
-        mem += 1;
-        checksum += byte;
-    }
-
-    U8 clientsum = (U8)(raspbootUartGet());
-    if (clientsum != checksum)
-    {
-        raspbootUartPut(COMMAND_TRANSFER_CHECKF);
-        return -1;
-    }
-
-    raspbootUartPut(COMMAND_TRANSFER_CHECKP);
-
-    *address = addr;
-    return 0;
-}
+S32 _raspbootTransferBinary(U32* address);
 
 S32 raspbootTransferMode(U32* address, U32* mode)
 {
@@ -92,3 +53,46 @@ S32 raspbootTransferMode(U32* address, U32* mode)
         return PROCESS_TRANSFER_ERROR;
     }
 }
+
+S32 _raspbootTransferBinary(U32* address)
+{
+    U32 addr = 0;
+
+    U32 i;
+    for (i = 0; i < 4; i++)
+    {
+        addr = addr << 8;
+        addr |= raspbootUartGet();
+    }
+
+    U32 count = 0;
+    for (i = 0; i < 4; i++)
+    {
+        count = count << 8;
+        count |= raspbootUartGet();
+    }
+
+    U8* mem = (U8*)(addr);
+    U8 checksum = 0;
+    for (i = 0; i < count; i++)
+    {
+        U8 byte = (U8)(raspbootUartGet());
+        *mem = byte;
+        mem += 1;
+        checksum += byte;
+    }
+
+    U8 clientsum = (U8)(raspbootUartGet());
+    if (clientsum != checksum)
+    {
+        raspbootUartPut(COMMAND_TRANSFER_CHECKF);
+        return -1;
+    }
+
+    raspbootUartPut(COMMAND_TRANSFER_CHECKP);
+
+    *address = addr;
+    return 0;
+}
+
+

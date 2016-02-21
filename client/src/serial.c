@@ -7,58 +7,8 @@
 
 #include "serial.h"
 
-S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
-{
-    // Initialize the tty structure
-    struct termios* tty = &(serial->tty);
-    memset(tty, 0, sizeof(*tty));
-
-    // Query initial TTY state
-    if (tcgetattr(serial->connection, tty) != 0)
-    {
-        fprintf(stderr,
-                "raspboot: error querying tty attributes: %s",
-                strerror(errno));
-        return -1;
-    }
-
-    // Set the TTY speed
-    cfsetospeed(tty, B115200);
-    cfsetispeed(tty, B115200);
-
-    // Set other terminal flags (char size, breaks, etc)
-    tty->c_cflag = (tty->c_cflag & ~CSIZE) | CS8;
-    tty->c_iflag &= ~IGNBRK;
-    tty->c_lflag = 0;
-    tty->c_oflag = 0;
-
-    // Set blocking parameters
-    tty->c_cc[VMIN]  = 1;
-    tty->c_cc[VTIME] = 5;
-
-    // Disable xon/xoff control
-    tty->c_iflag &= ~(IXON | IXOFF | IXANY);
-
-    // Disable parity and CTS/RTs
-    tty->c_cflag |= (CLOCAL | CREAD);
-    tty->c_cflag &= ~(PARENB | PARODD);
-    tty->c_cflag &= ~CSTOPB;
-    tty->c_cflag &= ~CRTSCTS;
-
-    // Apply the settings to the TTY
-    if (tcsetattr(serial->connection, TCSANOW, tty) != 0)
-    {
-        fprintf (stderr,
-                 "raspboot: error when setting tty attributes: %s",
-                 strerror(errno));
-        return -1;
-    }
-
-    // Clear all pending data from the TTY
-    raspbootSerialClear(serial, TCIOFLUSH);
-
-    return 0;
-}
+S32 _baudRate(const U32 baud);
+S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args);
 
 S32 raspbootSerialInit(Raspboot_Serial* serial, Raspboot_Args* args)
 {
@@ -158,3 +108,114 @@ S32 raspbootSerialClear(Raspboot_Serial* serial, const U32 queue)
 {
     return tcflush(serial->connection, queue);
 }
+
+S32 _baudRate(const U32 baud)
+{
+    switch (baud)
+    {
+        case 0:
+            return B0;
+        case 50:
+            return B50;
+        case 75:
+            return B75;
+        case 110:
+            return B110;
+        case 134:
+            return B134;
+        case 150:
+            return B150;
+        case 200:
+            return B200;
+        case 300:
+            return B300;
+        case 600:
+            return B600;
+        case 1200:
+            return B1200;
+        case 1800:
+            return B1800;
+        case 2400:
+            return B2400;
+        case 4800:
+            return B4800;
+        case 9600:
+            return B9600;
+        case 19200:
+            return B19200;
+        case 38400:
+            return B38400;
+        case 57600:
+            return B57600;
+        case 115200:
+            return B115200;
+        case 230400:
+            return B230400;
+
+        default:
+            return -1;
+    }
+}
+
+S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
+{
+    // Initialize the tty structure
+    struct termios* tty = &(serial->tty);
+    memset(tty, 0, sizeof(*tty));
+
+    // Query initial TTY state
+    if (tcgetattr(serial->connection, tty) != 0)
+    {
+        fprintf(stderr,
+                "raspboot: error querying tty attributes: %s\n",
+                strerror(errno));
+        return -1;
+    }
+
+    S32 baud = _baudRate(args->speed);
+    if (baud < 0)
+    {
+        fprintf(stderr,
+                "raspboot: invalid baud rate: %d\n",
+                args->speed);
+        return -1;
+    }
+
+    // Set the TTY speed
+    cfsetospeed(tty, baud);
+    cfsetispeed(tty, baud);
+
+    // Set other terminal flags (char size, breaks, etc)
+    tty->c_cflag = (tty->c_cflag & ~CSIZE) | CS8;
+    tty->c_iflag &= ~IGNBRK;
+    tty->c_lflag = 0;
+    tty->c_oflag = 0;
+
+    // Set blocking parameters
+    tty->c_cc[VMIN]  = 1;
+    tty->c_cc[VTIME] = 5;
+
+    // Disable xon/xoff control
+    tty->c_iflag &= ~(IXON | IXOFF | IXANY);
+
+    // Disable parity and CTS/RTs
+    tty->c_cflag |= (CLOCAL | CREAD);
+    tty->c_cflag &= ~(PARENB | PARODD);
+    tty->c_cflag &= ~CSTOPB;
+    tty->c_cflag &= ~CRTSCTS;
+
+    // Apply the settings to the TTY
+    if (tcsetattr(serial->connection, TCSANOW, tty) != 0)
+    {
+        fprintf (stderr,
+                 "raspboot: error when setting tty attributes: %s\n",
+                 strerror(errno));
+        return -1;
+    }
+
+    // Clear all pending data from the TTY
+    raspbootSerialClear(serial, TCIOFLUSH);
+
+    return 0;
+}
+
