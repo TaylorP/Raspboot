@@ -32,7 +32,7 @@ Raspboot can be configured with the following arguments, all of which are option
 -t      Terminate Raspboot after running the binary (typically used with -g) [default: disabled]
 -h      Print usage information if no other args are specified
 -l      The memory location to write the binary to [default: 0x10000]
--r      The baud rate - must be a valid rate supported by termios, e.g. 4800, 9600, 115200 [default: 115200]
+-r      The baud rate, as listed in the termios docs, e.g. 4800, 9600, 115200 [default: 115200]
 ```
 ## Interactive Mode Commands
 If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available:
@@ -41,7 +41,7 @@ go     Jumps into the uploaded code.
 ```
 
 ## Todo List
-* Properly use the speed/baud rate parameter
+* ~~Properly use the speed/baud rate parameter~~
 * Optionally pass parameters to the binary when executing it
 * Finish interactive mode 
 * Finish documentation
