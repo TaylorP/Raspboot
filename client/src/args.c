@@ -115,7 +115,7 @@ S32 raspbootArgsParse(Raspboot_Args* args, S32 argc, char** argv)
 
 void raspbootArgsUsage()
 {
-    printf("raspboot server 0.1\n"\
+    printf("raspboot client 0.1\n"\
            "Usage: raspboot [options] port\n\n"\
            "Raspboot is a simple command line interface for interacting \n"\
            "with embedded systems over a serial connection. It can be \n"\
@@ -132,6 +132,8 @@ void raspbootArgsUsage()
            "  -l\tThe memory location to write the binary to. Defaults to \n"\
            "\t0x10000. Raspboot will issue a warning if the address \n"\
            "\toverlaps with the location of the Raspboot client.\n"\
-           "  -r\tThe serial connection baud rate. Defaults to 115200.\n"
+           "  -r\tThe serial connection baud rate. Must be a valid baud rate \n"
+           "\tas specified in the termios(3) documentation, e.g. 300, 9600, \n"
+           "\t57600, etc. Defaults to 115200.\n"
            );
 }
