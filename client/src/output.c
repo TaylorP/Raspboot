@@ -123,9 +123,23 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
 
 S32 raspbootOutputGo(Raspboot_Serial* serial, const U32 address)
 {
-    printf("Executing code at memory address 0x%x\n\n", address);
+    printf("\tExecuting code at memory address 0x%x\n\n", address);
     
     raspbootSerialPut(serial, COMMAND_INTERACT_GO);
+    raspbootSerialPutW(serial, address);
+    raspbootSerialFlush(serial);
+
+    return 0;
+}
+
+S32 raspbootOutputGet(Raspboot_Serial* serial,
+                      const U32 address,
+                      const U8 count)
+{
+    printf("\tReading %d bytes at memory address 0x%x\n\n", count, address);
+
+    raspbootSerialPut(serial, COMMAND_INTERACT_GET);
+    raspbootSerialPut(serial, count);
     raspbootSerialPutW(serial, address);
     raspbootSerialFlush(serial);
 

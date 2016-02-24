@@ -125,7 +125,8 @@ S32 raspbootInteract(Raspboot_Serial* serial,
             return -1;
         }
 
-        printf("Reading %d bytes at memory address 0x%x\n\n", byteCount, location);
+        raspbootOutputGet(serial, location, byteCount);
+        raspbootInputGet(serial);
     }
     else
     {

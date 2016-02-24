@@ -35,4 +35,17 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args);
  */
 S32 raspbootOutputGo(Raspboot_Serial* serial, const U32 address);    
 
+/**
+ * Writes a get command to the serial connection
+ *
+ * @param   serial  The Raspboot_Serial connection to write to
+ * @param   address The address to read from
+ * @param   count   The number of bytes to read
+ *
+ * @return  0 on sucess, else an error code
+ */
+S32 raspbootOutputGet(Raspboot_Serial* serial,
+                      const U32 address,
+                      const U8 count);
+
 #endif
