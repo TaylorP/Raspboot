@@ -45,6 +45,7 @@ Arguments can be passed in any order, e.g. both `get -l 0x10000 -c 12` and `get 
 
 ## Todo List
 * ~~Properly use the speed/baud rate parameter~~
+* Add verbosity settings, especially for interactive mode
 * Optionally pass parameters to the binary when executing it
 * Finish interactive mode 
 * Switch to using `getopt` for interactive mode command parsing
