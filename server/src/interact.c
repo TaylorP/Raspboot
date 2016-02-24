@@ -26,11 +26,6 @@ S32 raspbootInteractMode(U32* mode)
             return PROCESS_INTERACT_ERROR;
         }
 
-        if (input == MODE_INTERACT)
-        {
-            input = raspbootUartGet();
-        }
-
         if (input == COMMAND_INTERACT_GO)
         {
             return PROCESS_INTERACT_EXECUTE; 
