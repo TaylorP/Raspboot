@@ -123,6 +123,8 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
 
 S32 raspbootOutputGo(Raspboot_Serial* serial, const U32 address)
 {
+    printf("Executing code at memory address 0x%x\n\n", address);
+    
     raspbootSerialPut(serial, COMMAND_INTERACT_GO);
     raspbootSerialPutW(serial, address);
     raspbootSerialFlush(serial);

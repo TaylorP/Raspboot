@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include <common/command.h>
+#include "input.h"
 #include "interact.h"
 #include "output.h"
 
@@ -36,18 +37,21 @@ S32 raspbootInteract(Raspboot_Serial* serial,
                      Raspboot_Args* args,
                      char* input)
 {
+    // Tokenize input commands
     char* tokens[TOKENIZER_SIZE];
     U32 count = _raspbootTokenizer(input, tokens, TOKENIZER_SIZE);
 
+    // Return early for empty input
     if (count == 0)
     {
         return -1;
     }
 
+    // Process the `go` command
     if (strcmp(tokens[0], "go") == 0)
     {
+        // Extract location parameter, if any is provided
         U32 location = args->location;
-
         if (count == 3 && (strcmp(tokens[1], "-l") == 0))
         {
             location = (U32)strtol(tokens[2], NULL, 0);
@@ -59,19 +63,9 @@ S32 raspbootInteract(Raspboot_Serial* serial,
             return -1;
         }
 
-        printf("Executing code at memory address 0x%x\n\n", location);
+        // Run the code and wait for the device to return
         raspbootOutputGo(serial, location);
-
-        while (1)
-        {
-            U8 byte;
-            raspbootSerialGet(serial, &byte);
-            if (byte == COMMAND_INTERACT_END)
-            {
-                break;
-            }
-            printf("%c", byte);
-        }
+        raspbootInputGo(serial);
     }
     else if (strcmp(tokens[0], "quit") == 0)
     {
