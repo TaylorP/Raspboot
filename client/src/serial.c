@@ -109,7 +109,7 @@ S32 raspbootSerialClear(Raspboot_Serial* serial, const U32 queue)
     return tcflush(serial->connection, queue);
 }
 
-S32 _baudRate(const U32 baud)
+S32 _raspbootBaudRate(const U32 baud)
 {
     switch (baud)
     {
@@ -172,7 +172,7 @@ S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
         return -1;
     }
 
-    S32 baud = _baudRate(args->speed);
+    S32 baud = _raspbootBaudRate(args->speed);
     if (baud < 0)
     {
         fprintf(stderr,
