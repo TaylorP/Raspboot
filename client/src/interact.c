@@ -77,6 +77,62 @@ S32 raspbootInteract(Raspboot_Serial* serial,
     {
         return 1;
     }
+    else if (strcmp(tokens[0], "get") == 0)
+    {
+        U32 location;
+        U32 byteCount = 4;
+
+        if (count == 5)
+        {
+            if (strcmp(tokens[1], "-l") == 0)
+            {
+                location = (U32)strtol(tokens[2], NULL, 0);
+            }
+            else if (strcmp(tokens[3], "-l") == 0)
+            {
+                location = (U32)strtol(tokens[4], NULL, 0);
+            }
+            else
+            {
+                fprintf(stderr,
+                    "\tInvalid command format, missing location parameter\n");
+                return -1;
+            }
+
+            if (strcmp(tokens[1], "-c") == 0)
+            {
+                byteCount = (U32)strtol(tokens[2], NULL, 0);
+            }
+            else if (strcmp(tokens[3], "-c") == 0)
+            {
+                byteCount = (U32)strtol(tokens[4], NULL, 0);
+            }
+            else
+            {
+                fprintf(stderr,
+                    "\tInvalid command format. Expect -l and -c flags\n");
+                return -1;
+            }
+        }
+        else if (count == 3 && (strcmp(tokens[1], "-l") == 0))
+        {
+            location = (U32)strtol(tokens[2], NULL, 0);
+        }
+        else
+        {
+            fprintf(stderr,
+                "\tInvalid command format, expected: get -l loc [-c count]\n");
+            return -1;   
+        }
+
+        if (byteCount < 1 || byteCount > 64)
+        {
+            fprintf(stderr, "\tInvalid command value. Count must be between 1 and 64\n");
+            return -1;
+        }
+
+        printf("Reading %d bytes at memory address 0x%x\n\n", byteCount, location);
+    }
     else
     {
         fprintf(stderr,

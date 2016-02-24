@@ -9,5 +9,7 @@
 
 #define COMMAND_INTERACT_GO     0x80
 #define COMMAND_INTERACT_END    0x81
+#define COMMAND_INTERACT_GET    0x82
+#define COMMAND_INTERACT_SET    0x83
 
 #endif
