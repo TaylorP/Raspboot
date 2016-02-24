@@ -3,9 +3,9 @@
 #include <stdlib.h>
 
 #include <common/mode.h>
-#include <common/command.h>
 
 #include "args.h"
+#include "interactive.h"
 #include "output.h"
 #include "serial.h"
 
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 
     if (args.terminate == 0)
     {
-        U8 inputBuffer[128];
+        char inputBuffer[128];
         U8 inputIndex = 0;
         printf("> ");
 
@@ -69,25 +69,7 @@ int main(int argc, char** argv)
             {
                 inputBuffer[inputIndex] = '\0';
                 inputIndex = 0;
-
-                if (inputBuffer[0] == 'g' && inputBuffer[1] == 'o')
-                {
-                    printf("Executing code at memory address 0x%x\n\n",
-                           args.location);
-                    raspbootSerialPut(&serial, COMMAND_INTERACT_GO);
-                    raspbootSerialFlush(&serial);
-
-                    while (1)
-                    {
-                        U8 byte;
-                        raspbootSerialGet(&serial, &byte);
-                        if (byte == COMMAND_INTERACT_END)
-                        {
-                            break;
-                        }
-                        printf("%c", byte);
-                    }
-                }
+                raspbootInteractive(&serial, &args, inputBuffer);
                 printf("> ");
             }
         }

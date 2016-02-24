@@ -20,7 +20,7 @@ DEPS = $(wildcard $(INCDIR)/*.h)
 CMNS = $(wildcard ../common/*.h)
 OBJS = $(addprefix $(BLDDIR)/, $(notdir $(SRCS:.c=.o)))
 OBJS += $(addprefix $(BLDDIR)/, $(notdir $(ASMS:.s=.o)))
-CFLAGS = -Wall -O3 -nostdlib -nostartfiles -ffreestanding -I./include -I../
+CFLAGS = -Wall -Werror -O3 -nostdlib -nostartfiles -ffreestanding -I./include -I../
 
 all: directories $(OUT)
 

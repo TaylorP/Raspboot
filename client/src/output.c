@@ -85,6 +85,15 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
         }
     }
 
+    // Close the file 
+    if (fclose(ptr) != 0)
+    {
+        fprintf(stderr,
+                "raspboot: error closing %s: %s\n",
+                args->binary, strerror(errno));
+        return -1;
+    }
+
     // Send the checksum value
     printf("\tChecksum = %d, confirming with server...\n", checksum);
     raspbootSerialPut(serial, checksum);

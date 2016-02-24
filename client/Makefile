@@ -15,7 +15,7 @@ SRCS = $(wildcard $(SRCDIR)/*.c)
 DEPS = $(wildcard $(INCDIR)/*.h)
 CMNS = $(wildcard ../common/*.h)
 OBJS = $(addprefix $(BLDDIR)/, $(notdir $(SRCS:.c=.o)))
-CFLAGS = -Wall -O3 -I./include -I../
+CFLAGS = -Wall -Werror -O3 -I./include -I../
 
 all: directories $(OUT)
 
