@@ -35,9 +35,9 @@ Raspboot can be configured with the following arguments, all of which are option
 -r      The baud rate, as listed in the termios docs, e.g. 4800, 9600, 115200 [default: 115200]
 ```
 ## Interactive Mode Commands
-If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available:
+If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available (optional parameters listed in [square brackets]):
 ```
-go     Jumps into the uploaded code.
+go [-l location]    Executes code at 'location'. Defaults to the value passed over the command line.
 ```
 
 ## Todo List
