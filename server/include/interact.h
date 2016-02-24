@@ -10,10 +10,11 @@
 /**
  * Runs the state machine for interact mode
  *
- * @param   mode    A pointer to the current mode value
+ * @param   address     The memory address containing the transfered bytes
+ * @param   mode        A pointer to the mode value
  *
  * @returns An interaction mode return code
  */
-S32 raspbootInteractMode(U32* mode);
+S32 raspbootInteractMode(U32* address, U32* mode);
 
 #endif

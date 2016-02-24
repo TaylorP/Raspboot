@@ -51,7 +51,7 @@ void main()
 
             case MODE_INTERACT:
             {
-                S32 result = raspbootInteractMode(&mode);
+                S32 result = raspbootInteractMode(&address, &mode);
 
                 if (result == PROCESS_INTERACT_EXECUTE)
                 {

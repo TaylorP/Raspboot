@@ -4,7 +4,7 @@
 #include "interact.h"
 #include "uart.h"
 
-S32 raspbootInteractMode(U32* mode)
+S32 raspbootInteractMode(U32* address, U32* mode)
 {
     U8 input = raspbootUartGet();
 
@@ -28,6 +28,17 @@ S32 raspbootInteractMode(U32* mode)
 
         if (input == COMMAND_INTERACT_GO)
         {
+            U32 addr = 0;
+
+            U32 i;
+            for (i = 0; i < 4; i++)
+            {
+                addr = addr << 8;
+                addr |= raspbootUartGet();
+            }
+
+            *address = addr;
+            
             return PROCESS_INTERACT_EXECUTE; 
         }
 

@@ -61,6 +61,7 @@ S32 raspbootInteractive(Raspboot_Serial* serial,
         printf("Executing code at memory address 0x%x\n\n",
                location);
         raspbootSerialPut(serial, COMMAND_INTERACT_GO);
+        raspbootSerialPutW(serial, location);
         raspbootSerialFlush(serial);
 
         while (1)
