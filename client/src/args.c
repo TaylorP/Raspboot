@@ -74,7 +74,7 @@ S32 raspbootArgsParse(Raspboot_Args* args, S32 argc, char** argv)
                 break;
 
             case 'l':
-                args->location = atoi(optarg);
+                args->location = (U32)strtol(optarg, NULL, 0);
                 break;
 
             case 'r':
