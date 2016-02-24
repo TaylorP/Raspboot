@@ -69,7 +69,11 @@ int main(int argc, char** argv)
             {
                 inputBuffer[inputIndex] = '\0';
                 inputIndex = 0;
-                raspbootInteract(&serial, &args, inputBuffer);
+                if (raspbootInteract(&serial, &args, inputBuffer) == 1)
+                {
+                    printf("Exiting Raspboot\n");
+                    break;
+                }
                 printf("> ");
             }
         }

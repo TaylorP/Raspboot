@@ -55,13 +55,13 @@ S32 raspbootInteract(Raspboot_Serial* serial,
         else if (count != 1)
         {
             fprintf(stderr,
-                "raspboot: invalid command format\n");
+                "\tInvalid command format, expected: go [-l loc]\n");
             return -1;
         }
 
         printf("Executing code at memory address 0x%x\n\n", location);
         raspbootOutputGo(serial, location);
-        
+
         while (1)
         {
             U8 byte;
@@ -72,6 +72,16 @@ S32 raspbootInteract(Raspboot_Serial* serial,
             }
             printf("%c", byte);
         }
+    }
+    else if (strcmp(tokens[0], "quit") == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        fprintf(stderr,
+            "\tUnknown command `%s`\n", tokens[0]);
+        return -1;   
     }
 
     return 0;

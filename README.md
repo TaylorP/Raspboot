@@ -38,6 +38,7 @@ Raspboot can be configured with the following arguments, all of which are option
 If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available (optional parameters listed in [square brackets]):
 ```
 go [-l location]    Executes code at 'location'. Defaults to the value passed over the command line.
+quit                Exits Raspboot
 ```
 
 ## Todo List
