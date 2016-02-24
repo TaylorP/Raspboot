@@ -120,3 +120,12 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
 
     return 0;
 }
+
+S32 raspbootOutputGo(Raspboot_Serial* serial, const U32 address)
+{
+    raspbootSerialPut(serial, COMMAND_INTERACT_GO);
+    raspbootSerialPutW(serial, address);
+    raspbootSerialFlush(serial);
+
+    return 0;
+}

@@ -5,7 +5,7 @@
 #include <common/mode.h>
 
 #include "args.h"
-#include "interactive.h"
+#include "interact.h"
 #include "output.h"
 #include "serial.h"
 
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
             {
                 inputBuffer[inputIndex] = '\0';
                 inputIndex = 0;
-                raspbootInteractive(&serial, &args, inputBuffer);
+                raspbootInteract(&serial, &args, inputBuffer);
                 printf("> ");
             }
         }

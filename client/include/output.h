@@ -16,7 +16,7 @@
 S32 raspbootOutputMode(Raspboot_Serial* serial, const U8 mode);
 
 /**
- * Writes a binary file to the serial connection.
+ * Writes a binary file to the serial connection
  *
  * @param   serial  The Raspboot_Serial connection to write to
  * @param   args    The Raspboot_Args instance describing the binary file
@@ -24,5 +24,15 @@ S32 raspbootOutputMode(Raspboot_Serial* serial, const U8 mode);
  * @return  0 on success, else an error code
  */
 S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args);
+
+/**
+ * Writes a go command to the serial connection
+ *
+ * @param   serial  The Raspboot_Serial connection to write to
+ * @param   address The address to pass along with the go command
+ *
+ * @return  0 on sucess, else an error code
+ */
+S32 raspbootOutputGo(Raspboot_Serial* serial, const U32 address);    
 
 #endif

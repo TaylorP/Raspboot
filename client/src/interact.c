@@ -4,7 +4,8 @@
 #include <string.h>
 
 #include <common/command.h>
-#include "interactive.h"
+#include "interact.h"
+#include "output.h"
 
 S32 _raspbootTokenizer(char* command, char** buffer, const U32 length)
 {
@@ -31,9 +32,9 @@ S32 _raspbootTokenizer(char* command, char** buffer, const U32 length)
     return index;
 }
 
-S32 raspbootInteractive(Raspboot_Serial* serial,
-                        Raspboot_Args* args,
-                        char* input)
+S32 raspbootInteract(Raspboot_Serial* serial,
+                     Raspboot_Args* args,
+                     char* input)
 {
     char* tokens[TOKENIZER_SIZE];
     U32 count = _raspbootTokenizer(input, tokens, TOKENIZER_SIZE);
@@ -58,12 +59,9 @@ S32 raspbootInteractive(Raspboot_Serial* serial,
             return -1;
         }
 
-        printf("Executing code at memory address 0x%x\n\n",
-               location);
-        raspbootSerialPut(serial, COMMAND_INTERACT_GO);
-        raspbootSerialPutW(serial, location);
-        raspbootSerialFlush(serial);
-
+        printf("Executing code at memory address 0x%x\n\n", location);
+        raspbootOutputGo(serial, location);
+        
         while (1)
         {
             U8 byte;
