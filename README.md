@@ -33,6 +33,7 @@ Raspboot can be configured with the following arguments, all of which are option
 -h      Print usage information if no other args are specified
 -l      The memory location to write the binary to [default: 0x10000]
 -r      The baud rate, as listed in the termios docs, e.g. 4800, 9600, 115200 [default: 115200]
+-v      The verbosity level. Errors = 0, Warnings = 1, General Info = 2. [default: 2]
 ```
 ## Interactive Mode Commands
 If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available (optional parameters listed in [square brackets]):
@@ -45,7 +46,7 @@ Arguments can be passed in any order, e.g. both `get -l 0x10000 -c 12` and `get 
 
 ## Todo List
 * ~~Properly use the speed/baud rate parameter~~
-* Add verbosity settings, especially for interactive mode
+* ~~Add verbosity settings, especially for interactive mode~~
 * Optionally pass parameters to the binary when executing it
 * Finish interactive mode 
 * Switch to using `getopt` for interactive mode command parsing

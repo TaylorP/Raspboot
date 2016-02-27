@@ -5,17 +5,20 @@
 #include <common/command.h>
 #include <common/mode.h>
 
+#include "console.h"
 #include "output.h"
 
-S32 raspbootOutputMode(Raspboot_Serial* serial, const U8 mode)
+S32 raspbootOutputMode(Raspboot_Serial* serial,
+                       Raspboot_Args* args,
+                       const U8 mode)
 {
     if (mode == MODE_TRANSFER)
     {
-        printf("Entering transfer mode\n");
+        raspbootConsoleInfo(args, "Entering transfer mode\n");
     }
     else if (mode == MODE_INTERACT)
     {
-        printf("Entering interaction mode\n");
+        raspbootConsoleInfo(args, "Entering interaction mode\n");
     }
     else
     {
@@ -31,14 +34,14 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
     FILE *ptr = fopen(args->binary, "rb");
     if (ptr == 0)
     {
-        fprintf(stderr,
-                "raspboot: error opening %s: %s\n",
+        raspbootConsoleError(args, "Unable to open file `%s`. (%s)\n",
                 args->binary, strerror(errno));
         return -1;
     }
     else
     {
-        printf("\tOpened binary file %s\n", args->binary);
+        raspbootConsoleInfo(args, "\tOpened binary file `%s`\n",
+                args->binary);
     }
 
     // Write the start transfer command byte
@@ -52,10 +55,13 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
     U32 size = ftell(ptr);
     raspbootSerialPutW(serial, size);
     fseek(ptr, 0L, SEEK_SET);
-    printf("\tWriting %d bytes of data to memory at address 0x%x\n",
-           size,
-           args->location);
-    printf("\tUsing block size of %d bytes\n", OUTPUT_BLOCK_SIZE);
+
+    raspbootConsoleInfo(args,
+            "\tWriting %d bytes of data to memory at address 0x%x\n",
+            size,
+            args->location);
+    raspbootConsoleInfo(args, "\tUsing block size of %d bytes\n",
+            OUTPUT_BLOCK_SIZE);
 
     // Write bytes in blocks of OUTPUT_BLOCK_SIZE (1024)
     U8 buffer[OUTPUT_BLOCK_SIZE];
@@ -76,8 +82,8 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
             checksum += buffer[i];
         }
 
-        // Print info to the Raspboot client
-        printf("\t%d/%d bytes written\n", total, size);
+        // Print transfer status to the console
+        raspbootConsoleInfo(args, "\t%d/%d bytes written\n", total, size);
 
         if (count < OUTPUT_BLOCK_SIZE)
         {
@@ -88,14 +94,14 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
     // Close the file 
     if (fclose(ptr) != 0)
     {
-        fprintf(stderr,
-                "raspboot: error closing %s: %s\n",
+        raspbootConsoleError(args, "Unable to close file `%s`. (%s)\n",
                 args->binary, strerror(errno));
         return -1;
     }
 
     // Send the checksum value
-    printf("\tChecksum = %d, confirming with server...\n", checksum);
+    raspbootConsoleInfo(args,
+                "\tChecksum = %d, confirming with server...\n", checksum);
     raspbootSerialPut(serial, checksum);
     raspbootSerialFlush(serial);
 
@@ -104,11 +110,12 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
     raspbootSerialGet(serial, &checkResult);
     if (checkResult == COMMAND_TRANSFER_CHECKP)
     {
-        printf("\tChecksum passed\n");
+       raspbootConsoleInfo(args, "\tChecksum passed\n");
     }
     else
     {
-        printf("\tChecksum failed. Retry transfer (y/n)?\n> ");
+        raspbootConsoleError(args,
+                "\tChecksum failed. Retry transfer (y/n)?\n> ");
         return -1;
     }
 
@@ -121,9 +128,12 @@ S32 raspbootOutputBinary(Raspboot_Serial* serial, Raspboot_Args* args)
     return 0;
 }
 
-S32 raspbootOutputGo(Raspboot_Serial* serial, const U32 address)
+S32 raspbootOutputGo(Raspboot_Serial* serial,
+                     Raspboot_Args* args,
+                     const U32 address)
 {
-    printf("\tExecuting code at memory address 0x%x\n\n", address);
+    raspbootConsoleInfo(args,
+            "\tExecuting code at memory address 0x%x\n\n", address);
     
     raspbootSerialPut(serial, COMMAND_INTERACT_GO);
     raspbootSerialPutW(serial, address);
@@ -133,10 +143,12 @@ S32 raspbootOutputGo(Raspboot_Serial* serial, const U32 address)
 }
 
 S32 raspbootOutputGet(Raspboot_Serial* serial,
+                      Raspboot_Args* args,
                       const U32 address,
                       const U8 count)
 {
-    printf("\tReading %d bytes at memory address 0x%x\n\n", count, address);
+    raspbootConsoleInfo(args,
+            "\tReading %d bytes at memory address 0x%x\n\n", count, address);
 
     raspbootSerialPut(serial, COMMAND_INTERACT_GET);
     raspbootSerialPut(serial, count);

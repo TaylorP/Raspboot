@@ -5,6 +5,7 @@
 #include <common/mode.h>
 
 #include "args.h"
+#include "console.h"
 #include "interact.h"
 #include "output.h"
 #include "serial.h"
@@ -17,8 +18,7 @@ int main(int argc, char** argv)
     if (raspbootArgsInit(&args) != 0 ||
         raspbootArgsParse(&args, argc, argv) < 0)
     {
-        fprintf(stderr, "Unable to parse arguments.\n");
-        exit(1);
+        raspbootConsoleFatal(0, "Unable to parse arguments.\n");;
     }
 
     if (args.help)
@@ -29,13 +29,12 @@ int main(int argc, char** argv)
 
     if (raspbootSerialInit(&serial, &args) != 0)
     {
-        fprintf(stderr, "Unable to initialize serial connection\n");
-        exit(1);
+        raspbootConsoleFatal(0, "Unable to initialize serial connection\n");
     }
 
     if (args.binary != 0)
     {
-        raspbootOutputMode(&serial, MODE_TRANSFER);
+        raspbootOutputMode(&serial, &args, MODE_TRANSFER);
         while (raspbootOutputBinary(&serial, &args) != 0)
         {
             char retry = getchar();
@@ -46,13 +45,12 @@ int main(int argc, char** argv)
 
             if (retry != 'Y' && retry != 'y')
             {
-                printf("Transfer aborted\n");
-                exit(1);
+                raspbootConsoleWarn(&args, "Transfer Aborted.\n");
             }
         }
     }
 
-    raspbootOutputMode(&serial, MODE_INTERACT);
+    raspbootOutputMode(&serial, &args, MODE_INTERACT);
     raspbootSerialFlush(&serial);
 
     if (args.terminate == 0)
@@ -71,7 +69,7 @@ int main(int argc, char** argv)
                 inputIndex = 0;
                 if (raspbootInteract(&serial, &args, inputBuffer) == 1)
                 {
-                    printf("Exiting Raspboot\n");
+                    raspbootConsoleInfo(&args, "Exiting Raspboot\n");
                     break;
                 }
                 printf("> ");

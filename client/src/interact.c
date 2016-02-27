@@ -64,7 +64,7 @@ S32 raspbootInteract(Raspboot_Serial* serial,
         }
 
         // Run the code and wait for the device to return
-        raspbootOutputGo(serial, location);
+        raspbootOutputGo(serial, args, location);
         raspbootInputGo(serial);
     }
     else if (strcmp(tokens[0], "quit") == 0)
@@ -125,7 +125,7 @@ S32 raspbootInteract(Raspboot_Serial* serial,
             return -1;
         }
 
-        raspbootOutputGet(serial, location, byteCount);
+        raspbootOutputGet(serial, args, location, byteCount);
         raspbootInputGet(serial);
     }
     else

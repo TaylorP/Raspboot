@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "console.h"
 #include "serial.h"
 
 S32 _baudRate(const U32 baud);
@@ -25,8 +26,7 @@ S32 raspbootSerialInit(Raspboot_Serial* serial, Raspboot_Args* args)
     serial->connection = open(args->port, O_RDWR | O_NOCTTY | O_SYNC);
     if (serial->connection < 0)
     {
-        fprintf(stderr,
-                "raspboot: error opening %s: %s\n",
+        raspbootConsoleError(args, "Unable to open port `%s`: %s\n",
                 args->port, strerror(errno));
         return -1;
     }
@@ -166,8 +166,7 @@ S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
     // Query initial TTY state
     if (tcgetattr(serial->connection, tty) != 0)
     {
-        fprintf(stderr,
-                "raspboot: error querying tty attributes: %s\n",
+        raspbootConsoleError(args, "Unable to query tty attributes. (%s)\n",
                 strerror(errno));
         return -1;
     }
@@ -175,10 +174,10 @@ S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
     S32 baud = _raspbootBaudRate(args->speed);
     if (baud < 0)
     {
-        fprintf(stderr,
-                "raspboot: invalid baud rate: %d\n",
+        raspbootConsoleWarn(args,
+                "Invalid baud rate `%d`. Using default of 115,200.\n",
                 args->speed);
-        return -1;
+        baud = B115200;
     }
 
     // Set the TTY speed
@@ -207,9 +206,8 @@ S32 _raspbootInitTerminal(Raspboot_Serial* serial, Raspboot_Args* args)
     // Apply the settings to the TTY
     if (tcsetattr(serial->connection, TCSANOW, tty) != 0)
     {
-        fprintf (stderr,
-                 "raspboot: error when setting tty attributes: %s\n",
-                 strerror(errno));
+        raspbootConsoleError(args, "Unable to set tty attributes. (%s)\n",
+                strerror(errno));
         return -1;
     }
 

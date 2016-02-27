@@ -22,6 +22,9 @@ typedef struct
     /// checked if no other arguments or serial port were specified.
     U32     help;
 
+    /// Set to the desired verbosity level for Raspboot logging
+    U32     verbosity;
+
     /// The location in the device memory to place the binary code.
     U32     location;
 
