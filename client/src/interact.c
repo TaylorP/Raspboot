@@ -8,30 +8,8 @@
 #include "interact.h"
 #include "output.h"
 
-S32 _raspbootTokenizer(char* command, char** buffer, const U32 length)
-{
-    if (command == 0)
-    {
-        return -1;
-    }
-
-    static const char* seperators = " \t\n";
-    char* token = strtok(command, seperators);
-    U32 index = 0;
-
-    while (token)
-    {
-        buffer[index++] = token;
-        token = strtok((char*)0, seperators);
-
-        if (index >= length)
-        {
-            return -1;
-        }
-    }
-
-    return index;
-}
+S32 _raspbootInteractTokens(char* command, char** buffer, const U32 length);
+void _raspbootInteractUsage();
 
 S32 raspbootInteract(Raspboot_Serial* serial,
                      Raspboot_Args* args,
@@ -39,7 +17,7 @@ S32 raspbootInteract(Raspboot_Serial* serial,
 {
     // Tokenize input commands
     char* tokens[TOKENIZER_SIZE];
-    U32 count = _raspbootTokenizer(input, tokens, TOKENIZER_SIZE);
+    U32 count = _raspbootInteractTokens(input, tokens, TOKENIZER_SIZE);
 
     // Return early for empty input
     if (count == 0)
@@ -70,6 +48,11 @@ S32 raspbootInteract(Raspboot_Serial* serial,
     else if (strcmp(tokens[0], "quit") == 0)
     {
         return 1;
+    }
+    else if (strcmp(tokens[0], "help") == 0)
+    {
+        _raspbootInteractUsage();
+        return 0;
     }
     else if (strcmp(tokens[0], "get") == 0)
     {
@@ -136,4 +119,42 @@ S32 raspbootInteract(Raspboot_Serial* serial,
     }
 
     return 0;
+}
+
+S32 _raspbootInteractTokens(char* command, char** buffer, const U32 length)
+{
+    if (command == 0)
+    {
+        return -1;
+    }
+
+    static const char* seperators = " \t\n";
+    char* token = strtok(command, seperators);
+    U32 index = 0;
+
+    while (token)
+    {
+        buffer[index++] = token;
+        token = strtok((char*)0, seperators);
+
+        if (index >= length)
+        {
+            return -1;
+        }
+    }
+
+    return index;
+}
+
+void _raspbootInteractUsage()
+{
+    printf("\tThe following commands are supported. Arguments listed in \n"\
+           "\t[square brackets] are optional.\n\n"\
+           "\tget -l loc [-c count]\tReads `count` bytes at address `loc`. The\n"\
+           "\t\t\t\tdefault value of `count` is 4.\n\n" \
+           "\tgo [-l loc]\t\tExecutes code at address `loc`. The default\n"\
+           "\t\t\t\tvalue of `loc` is the address passed in over\n"\
+           "\t\t\t\tthe command line.\n\n"\
+           "\thelp\t\t\tPrints this help message.\n\n"\
+           "\tquit\t\t\tExits Raspboot.\n");
 }

@@ -40,8 +40,9 @@ Raspboot can be configured with the following arguments, all of which are option
 ## Interactive Mode Commands
 If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available (optional parameters listed in [square brackets]):
 ```
-go [-l loc]             Executes code at 'loc'. Defaults to the value passed over the command line.
 get -l loc [-c count]   Reads and prints 'count' bytes from 'loc'. 'count' defaults to 4 bytes.
+go [-l loc]             Executes code at 'loc'. Defaults to the value passed over the command line.
+help                    Lists available commands
 quit                    Exits Raspboot
 ```
 Arguments can be passed in any order, e.g. both `get -l 0x10000 -c 12` and `get -c 12 -l 0x10000` are valid.
