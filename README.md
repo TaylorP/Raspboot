@@ -11,7 +11,9 @@ Raspboot uses a client/server model. The Raspberry Pi runs a server application 
 ## Compiling
 To compile code for the Raspberry Pi, the system needs to have the `arm-none-eabi` toolchain installed. On Debian/Mint/Ubuntu this can be installed via the package manager, e.g. `apt-get install gcc-arm-none-eabi`.
 
-Raspboot can be compiled by running `make` in the checked out directory. The Makefile will build both the client (`bin/raspboot`) and server (`bin/raspboot-server`) applications. Running `make install` will install the Raspboot client binary to `/usr/local/bin`.
+Raspboot can be compiled by running `make` in the checked out directory. The Makefile will build both the client (`bin/raspboot`) and server (`bin/raspboot-server`) applications. Running `make install` will install the Raspboot client binary to `/usr/local/bin`. 
+
+A Doxygen configuration file is included in the root directory of the project. Running `make doc` will compile the in-source documentation to the `./doc` directory. `make clean_doc` can be used to delete the documentation files.
 
 ## Usage
 The server binary needs to be written to the Raspberry Pi's SD card and set as the bootable image. To do so, copy the server application to the boot partition of the SD card and add `kernel=raspboot-server` to the end of the `config.txt` file in the same directory. Once this is done, the card can be reinserted in the Raspberry Pi and the device powered on.
@@ -50,9 +52,10 @@ Arguments can be passed in any order, e.g. both `get -l 0x10000 -c 12` and `get 
 * Optionally pass parameters to the binary when executing it
 * Finish interactive mode 
 * Switch to using `getopt` for interactive mode command parsing
-* Finish documentation
+* ~~Finish documentation~~
 * ~~Modularize server-side UART code~~
 * Add Ethernet support (long term)
+* GitHub Wiki documentation (long term)
 
 ## Other Platforms
 It should be relatively straightforward to port the device server to a different platform. The only portion of the code that is specific to the Raspberry Pi is the serial port interface.
