@@ -1,7 +1,7 @@
 #include "memory.h"
 #include "uart.h"
 
-void raspbootUartInit()
+void raspbootUartInit(void)
 {
     __str(UART0_CR,0);
 
@@ -31,7 +31,7 @@ void raspbootUartPut(const U8 byte)
     __strb(UART0_DR, byte);
 }
 
-U8 raspbootUartGet()
+U8 raspbootUartGet(void)
 {
     while ((__ldr(UART0_FR) & 0x10) != 0)
     {

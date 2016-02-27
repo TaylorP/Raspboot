@@ -70,6 +70,6 @@ S32 raspbootArgsParse(Raspboot_Args* args, S32 argc, char** argv);
 /**
  * Prints Raspboot usage information to stdout
  */
-void raspbootArgsUsage();
+void raspbootArgsUsage(void);
 
 #endif

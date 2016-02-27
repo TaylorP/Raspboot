@@ -21,7 +21,7 @@ S32 processAbort(U32* mode)
     return -1;
 }
 
-void main()
+void main(void)
 {
     raspbootUartInit();
 

@@ -32,7 +32,7 @@
 /**
  * Initializes the UART0 serial IO port
  */
-void raspbootUartInit();
+void raspbootUartInit(void);
 
 /**
  * Writes a byte to the UART; blocks until the UART is able to write
@@ -47,6 +47,6 @@ void raspbootUartPut(const U8 byte);
  *
  * @return  The byte read from the UART
  */
-U8 raspbootUartGet();
+U8 raspbootUartGet(void);
 
 #endif

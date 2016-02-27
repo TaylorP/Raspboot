@@ -127,7 +127,7 @@ S32 raspbootArgsParse(Raspboot_Args* args, S32 argc, char** argv)
     return 0;
 }
 
-void raspbootArgsUsage()
+void raspbootArgsUsage(void)
 {
     printf("raspboot client 0.1\n"\
            "Usage: raspboot [options] port\n\n"\
