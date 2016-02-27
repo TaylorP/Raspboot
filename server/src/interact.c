@@ -56,7 +56,6 @@ S32 raspbootInteractMode(U32* address, U32* mode)
             raspbootUartPut(*mem);
         }
 
-        raspbootUartPut(COMMAND_INTERACT_END);
         return PROCESS_INTERACT_SUCCESS;
     }
 

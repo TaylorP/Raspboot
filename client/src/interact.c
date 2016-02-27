@@ -126,7 +126,7 @@ S32 raspbootInteract(Raspboot_Serial* serial,
         }
 
         raspbootOutputGet(serial, args, location, byteCount);
-        raspbootInputGet(serial);
+        raspbootInputGet(serial, byteCount);
     }
     else
     {

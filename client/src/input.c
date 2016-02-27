@@ -18,25 +18,21 @@ S32 raspbootInputGo(Raspboot_Serial* serial)
     return 0;
 }
 
-S32 raspbootInputGet(Raspboot_Serial* serial)
+S32 raspbootInputGet(Raspboot_Serial* serial, const U8 count)
 {
-    U8 count = 0;
-    while (1)
+    U8 read = 0;
+    while (read < count)
     {
         U8 byte;
         raspbootSerialGet(serial, &byte);
-        if (byte == COMMAND_INTERACT_END)
+        
+        if (read != 0)
         {
-            break;
-        }
-
-        if (count != 0)
-        {
-            if (count % 16 == 0)
+            if (read % 16 == 0)
             {
                 printf("\n\t");
             }
-            else if (count % 2 == 0)
+            else if (read % 2 == 0)
             {
                 printf(" ");
             }
@@ -47,7 +43,7 @@ S32 raspbootInputGet(Raspboot_Serial* serial)
         }
 
         printf("%02x", byte);
-        count++;
+        read++;
     }
 
     printf("\n");
