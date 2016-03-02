@@ -104,7 +104,8 @@ S32 raspbootInteract(Raspboot_Serial* serial,
 
         if (byteCount < 1 || byteCount > 64)
         {
-            fprintf(stderr, "\tInvalid command value. Count must be between 1 and 64\n");
+            fprintf(stderr,
+                "\tInvalid command value. Count must be between 1 and 64\n");
             return -1;
         }
 
@@ -210,6 +211,14 @@ S32 raspbootInteract(Raspboot_Serial* serial,
                 "\tInvalid command format, expected: set -l loc [-v value]\n");
             return -1;   
         }
+
+        if (location % 4 != 0)
+        {
+            fprintf(stderr,
+                "\tInvalid command value. Location must be word aligned\n");
+            return -1;
+        }
+
 
         raspbootOutputSetW(serial, args, location, value);
     }

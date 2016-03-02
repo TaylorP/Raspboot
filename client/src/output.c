@@ -180,7 +180,7 @@ S32 raspbootOutputSetW(Raspboot_Serial* serial,
                        const U32 value)
 {
     raspbootConsoleInfo(args,
-            "\tWriting 0x%x to memory address 0x%x\n\n", value, address);
+            "\tWriting 0x%x to memory address 0x%x\n", value, address);
 
     raspbootSerialPut(serial, COMMAND_INTERACT_SET_W);
     raspbootSerialPutW(serial, value);
