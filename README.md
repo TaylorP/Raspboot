@@ -41,7 +41,8 @@ Raspboot can be configured with the following arguments, all of which are option
 If the `-t` command is not specified, Rasboot will enter interactive mode after uploading the binary file (if any). The following commands are available (optional parameters listed in [square brackets]):
 ```
 get -l loc [-c count]   Reads and prints 'count' bytes from 'loc'. 'count' defaults to 4 bytes.
-set -l loc [-v value]   Sets the contents of at 'loc' to 'value'. 'value' is a byte; the default is 0.
+set -l loc [-v value]   Sets the contents of memory at 'loc' to 'value'. 'value' is a byte; the default is 0.
+setw -l loc [-v value]  Sets the contents of memory at 'loc' to 'value'. 'value' is a word; the default is 0.
 
 go [-l loc]             Executes code at 'loc'. Defaults to the value passed over the command line.
 
@@ -56,6 +57,7 @@ Arguments can be passed in any order, e.g. both `get -l 0x10000 -c 12` and `get 
 * Optionally pass parameters to the binary when executing it
 * Finish interactive mode 
 * Switch to using `getopt` for interactive mode command parsing
+* Verify that `loc` is word-aligned for SETW command
 * ~~Finish documentation~~
 * ~~Modularize server-side UART code~~
 * Add Ethernet support (long term)

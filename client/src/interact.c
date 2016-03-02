@@ -162,6 +162,57 @@ S32 raspbootInteract(Raspboot_Serial* serial,
 
         raspbootOutputSet(serial, args, location, value);
     }
+    else if (strcmp(tokens[0], "setw") == 0)
+    {
+        U32 location;
+        U32 value = 0;
+
+        if (count == 5)
+        {
+            if (strcmp(tokens[1], "-l") == 0)
+            {
+                location = (U32)strtol(tokens[2], NULL, 0);
+            }
+            else if (strcmp(tokens[3], "-l") == 0)
+            {
+                location = (U32)strtol(tokens[4], NULL, 0);
+            }
+            else
+            {
+                fprintf(stderr,
+                    "\tInvalid command format, missing location parameter\n");
+                return -1;
+            }
+
+            if (strcmp(tokens[1], "-v") == 0)
+            {
+                value = (U32)strtol(tokens[2], NULL, 0);
+            }
+            else if (strcmp(tokens[3], "-v") == 0)
+            {
+                value = (U32)strtol(tokens[4], NULL, 0);
+            }
+            else
+            {
+                fprintf(stderr,
+                    "\tInvalid command format. Expect -l and -v flags\n");
+                return -1;
+            }
+        }
+        else if (count == 3 && (strcmp(tokens[1], "-l") == 0))
+        {
+            location = (U32)strtol(tokens[2], NULL, 0);
+            value = 0;
+        }
+        else
+        {
+            fprintf(stderr,
+                "\tInvalid command format, expected: set -l loc [-v value]\n");
+            return -1;   
+        }
+
+        raspbootOutputSetW(serial, args, location, value);
+    }
     else
     {
         fprintf(stderr,
