@@ -148,7 +148,7 @@ S32 raspbootOutputGet(Raspboot_Serial* serial,
                       const U8 count)
 {
     raspbootConsoleInfo(args,
-            "\tReading %d bytes at memory address 0x%x\n\n", count, address);
+            "\tReading %d bytes at memory address 0x%x\n", count, address);
 
     raspbootSerialPut(serial, COMMAND_INTERACT_GET);
     raspbootSerialPut(serial, count);
@@ -164,7 +164,7 @@ S32 raspbootOutputSet(Raspboot_Serial* serial,
                       const U8 value)
 {
     raspbootConsoleInfo(args,
-            "\tWriting 0x%02x to memory address 0x%x\n\n", value, address);
+            "\tWriting 0x%02x to memory address 0x%x\n", value, address);
 
     raspbootSerialPut(serial, COMMAND_INTERACT_SET);
     raspbootSerialPut(serial, value);
