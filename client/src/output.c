@@ -157,3 +157,19 @@ S32 raspbootOutputGet(Raspboot_Serial* serial,
 
     return 0;
 }
+
+S32 raspbootOutputSet(Raspboot_Serial* serial,
+                      Raspboot_Args* args,
+                      const U32 address,
+                      const U8 value)
+{
+    raspbootConsoleInfo(args,
+            "\tWriting 0x%02x to memory address 0x%x\n\n", value, address);
+
+    raspbootSerialPut(serial, COMMAND_INTERACT_SET);
+    raspbootSerialPut(serial, value);
+    raspbootSerialPutW(serial, address);
+    raspbootSerialFlush(serial);
+
+    return 0;
+}

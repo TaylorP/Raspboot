@@ -58,6 +58,23 @@ S32 raspbootInteractMode(U32* address, U32* mode)
 
         return PROCESS_INTERACT_SUCCESS;
     }
+    else if (input == COMMAND_INTERACT_SET)
+    {
+        U32 addr = 0;
+        U32 value = raspbootUartGet();
+
+        U32 i;
+        for (i = 0; i < 4; i++)
+        {
+            addr = addr << 8;
+            addr |= raspbootUartGet();
+        }
+
+        U8* mem = (U8*)(addr);
+        *mem = value;
+
+        return PROCESS_INTERACT_SUCCESS;
+    }
 
     return PROCESS_INTERACT_ERROR;
 }
