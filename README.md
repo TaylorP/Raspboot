@@ -52,14 +52,9 @@ quit                    Exits Raspboot
 Arguments can be passed in any order, e.g. both `get -l 0x10000 -c 12` and `get -c 12 -l 0x10000` are valid.
 
 ## Todo List
-* ~~Properly use the speed/baud rate parameter~~
-* ~~Add verbosity settings, especially for interactive mode~~
 * Optionally pass parameters to the binary when executing it
-* Finish interactive mode 
+* Finish interactive mode
 * Switch to using `getopt` for interactive mode command parsing
-* Verify that `loc` is word-aligned for SETW command
-* ~~Finish documentation~~
-* ~~Modularize server-side UART code~~
 * Add Ethernet support (long term)
 * GitHub Wiki documentation (long term)
 

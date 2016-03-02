@@ -261,8 +261,13 @@ void _raspbootInteractUsage()
 {
     printf("\tThe following commands are supported. Arguments listed in \n"\
            "\t[square brackets] are optional.\n\n"\
-           "\tget -l loc [-c count]\tReads `count` bytes at address `loc`. The\n"\
-           "\t\t\t\tdefault value of `count` is 4.\n\n" \
+           "\tget -l loc [-c count]\tReads `count` bytes at address `loc`.\n"\
+           "\t\t\t\tThe default value of `count` is 4.\n\n" \
+           "\tset -l loc [-v value]\tSets the contents of address `loc` to\n"\
+           "\t\t\t\tthe byte 'value'. Default value is 0.\n\n" \
+           "\tsetw -l loc [-v value]\tSets the contents of address `loc` to\n"\
+           "\t\t\t\tthe word 'value'. The memory address\n" \
+           "\t\t\t\tmust be word aligned. Default value is 0.\n\n" \
            "\tgo [-l loc]\t\tExecutes code at address `loc`. The default\n"\
            "\t\t\t\tvalue of `loc` is the address passed in over\n"\
            "\t\t\t\tthe command line.\n\n"\
