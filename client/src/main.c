@@ -63,7 +63,7 @@ int main(int argc, char** argv)
         {
             inputBuffer[inputIndex++] = getchar();
 
-            if (inputBuffer[inputIndex - 1] == '\n')
+            if (inputBuffer[inputIndex - 1] == '\n' || inputIndex == 126)
             {
                 inputBuffer[inputIndex] = '\0';
                 inputIndex = 0;
